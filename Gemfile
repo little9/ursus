@@ -77,6 +77,7 @@ gem 'bootstrap', '~> 4.0'
 gem 'coveralls', require: false
 gem 'devise'
 gem 'devise-guests', '~> 0.6'
+gem 'httparty'
 gem 'jquery-rails'
 gem 'loofah', '>= 2.2.3'
 gem 'rsolr', '>= 1.0'

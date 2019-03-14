@@ -31,7 +31,8 @@ class CatalogController < ApplicationController
       fq: '{!term f=has_model_ssim v=Work}'
     }
 
-    config.show.partials.insert(1, :uv)
+    config.show.partials.insert(1, :collection_banner)
+    config.show.partials.insert(2, :uv)
     config.show.partials.insert(3, :license)
 
     # solr field configuration for document/show views
