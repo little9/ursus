@@ -4,6 +4,27 @@ require 'rails_helper'
 
 RSpec.describe BannerHelper, type: :helper do
   let(:doc) { {} }
+  let(:bod) { { local_path: '/opt/path/public/branding/3049304/banner/test.tif' }.to_json }
+  let(:stubbed_request) do
+    stub_request(:get, 'http://californica-test.library.ucla.edu/branding_info/1.json')
+      .with(
+        headers: {
+          'Accept' => '*/*',
+          'Accept-Encoding' => 'gzip;q=1.0,deflate;q=0.6,identity;q=0.3',
+          'User-Agent' => 'Ruby'
+        }
+      ).to_return(status: 200, body: bod,
+                  headers: { 'Content-Type' => 'application/json' })
+  end
+
+  before do
+    WebMock.disable_net_connect!
+  end
+
+  after do
+    WebMock.allow_net_connect!
+  end
+
   describe '#collection?' do
     it 'can determine if something is a collection' do
       doc['has_model_ssim'] = ['Collection']
@@ -17,21 +38,27 @@ RSpec.describe BannerHelper, type: :helper do
   end
 
   describe '#render_banner_tag' do
-    it 'returns nil if there is a problem with the http request' do
+    it 'returns an img tag for the banner' do
+      doc['id'] = '1'
       doc['has_model_ssim'] = ['Collection']
-      expect(render_banner_tag(doc)).to eq(nil)
+      stubbed_request
+      doc['has_model_ssim'] = ['Collection']
+      expect(render_banner_tag(doc)).to eq("<img width='800' alt='Collection banner' height='100' src='http://californica-test.library.ucla.edu/branding/3049304/banner/test.tif'/>")
     end
   end
 
   describe '#get_img_path' do
-    it 'returns nil if there is a problem with the http request' do
-      expect(get_img_path('1')).to eq(nil)
+    it 'returns the url to the image' do
+      stubbed_request
+      expect(get_img_path('1')).to eq('http://californica-test.library.ucla.edu/branding/3049304/banner/test.tif')
     end
+  end
 
-    describe '#get_branding_info' do
-      it 'returns nil if there is a problem with the http request' do
-        expect(get_branding_info('1')).to eq(nil)
-      end
+  describe '#get_branding_info' do
+    it 'returns an array with the path to the branding info' do
+      stubbed_request
+      expect(get_branding_info('1')).to eq(['/opt/path',
+                                            'branding/3049304/banner/test.tif'])
     end
   end
 end
