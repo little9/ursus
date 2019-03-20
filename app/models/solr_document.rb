@@ -1,6 +1,6 @@
 class SolrDocument
   include Blacklight::Solr::Document
-  # self.unique_key = 'id'
+  self.unique_key = 'blacklight_id_ssi'
 
   # Email uses the semantic field mappings below to generate the body of an email.
   SolrDocument.use_extension(Blacklight::Document::Email)
