@@ -11,6 +11,7 @@ pool:
 
 steps:
 - script: |
+    service mysql stop
     docker-compose -f docker-compose.yml --project-directory .  -d
     docker-compose run web gem install bundler
     docker-compose run web bundle install
