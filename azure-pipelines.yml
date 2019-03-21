@@ -11,7 +11,6 @@ pool:
 
 steps:
 - script: |
-    systemctl stop mysql
     docker-compose up -d
     docker-compose run web gem install bundler
     docker-compose run web bundle install
